@@ -72,13 +72,18 @@ class Profile extends React.Component {
         this.props.logout()
     } 
 
+    componentDidMount(){
+        console.log(this.props.user.front_picture)
+    }
+    
+
 
     render() {
         const {user} = this.props
         return (
             <View style={styles.container} >
                 <View style={styles.row}>
-                    <Image style={styles.avatar} source={{ uri: `http://${user.front_picture}` }} />
+                    <Image style={styles.avatar} source={{ uri: `${user.front_picture}` }} />
                     <View style={styles.profileHeader}>
                     <Text style={styles.profileHeaderName}>{user.first_name} {user.last_name}</Text>
                     <Text style={styles.profileHeaderID}>{user.elector_id}</Text>

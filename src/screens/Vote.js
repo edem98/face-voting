@@ -63,13 +63,13 @@ const styles = StyleSheet.create({
 export default function Vote({ navigation }) {
 
     const [votes, setVotes] = useState([]);
-
-    console.log("Je suis sur vote")
+    const [url, setUrl] = useState("https://0b9fd0cc08a8.ngrok.io/");
+    const [userId,setUserId] = useState("ab06fe6e-9")
 
     useEffect(() => {
-        axios.get('https://eb34a3589563.ngrok.io/api/election/votes/ab06fe6e-9/')
+        axios.get(`${url}api/election/votes/${userId}/`)
             .then((response) => {
-                setVotes, setVotes(response.data)
+                setVotes(response.data)
             }).catch(err => {
                 console.log(err)
             })

@@ -2,14 +2,12 @@ import React, { useState, useEffect } from 'react'
 import { Text, ScrollView, View, StyleSheet } from 'react-native'
 import axios from 'axios'
 import SurveyCard from './components/SurveyCard'
-import { useNavigation } from '@react-navigation/native';
-import LottieView from 'lottie-react-native';
+// import LottieView from 'lottie-react-native';
 
 
-export default function Survey() {
+export default function Survey({navigation}) {
 
     const [surveys, setSurveys] = useState([]);
-    const navigation = useNavigation();
     const electorId = "ab06fe6e-9"
     let myAnimation = null
 
@@ -21,7 +19,7 @@ export default function Survey() {
             }).catch(err => {
                 console.log(err)
             })
-    }, [])
+    }, [surveys])
 
     useEffect(() => {
         if (myAnimation) {
@@ -46,7 +44,7 @@ export default function Survey() {
                         navigation={navigation}>
                     </SurveyCard>)
                 : <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <LottieView
+                    {/* <LottieView
                         ref={animation => {
                             myAnimation = animation;
                         }}
@@ -56,7 +54,7 @@ export default function Survey() {
                             backgroundColor: '#eee',
                         }}
                         source={require('../../assets/no-more-survey.json')}
-                    />
+                    /> */}
                     <Text style={{ fontSize: 17, marginTop: 10 }}>No survey available for you.</Text>
                 </View>}
         </ScrollView>

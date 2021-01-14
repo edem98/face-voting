@@ -24,6 +24,7 @@ class SignIn extends React.Component {
       electorId: "",
       isConnecting: false,
     };
+    this.url = "https://0b9fd0cc08a8.ngrok.io";
   }
 
   isValidCredentials = () => {
@@ -41,7 +42,7 @@ class SignIn extends React.Component {
       date_of_issuance: data.date_of_issuance,
       elector_id: data.elector_id,
       first_name: data.first_name,
-      front_picture: "eb34a3589563.ngrok.io" + data.front_picture,
+      front_picture: this.url + data.front_picture,
       last_name: data.last_name,
       sexe: data.sexe,
     });
@@ -54,7 +55,7 @@ class SignIn extends React.Component {
     });
     if (this.isValidCredentials()) {
       // send request for a visit on the current property
-      await axios.get(`https://eb34a3589563.ngrok.io/api/elector/${this.state.electorId}`)
+      await axios.get(`${this.url}/api/elector/${this.state.electorId}`)
         .then((res) => {
           Alert.alert("SUCCÈS!!", "Vous vous êtes connectez avec succès", [
             {
@@ -69,7 +70,7 @@ class SignIn extends React.Component {
           console.log(error);
           alert("Your Id is wrong. Please check it and try again.");
         });
-    } else {ab-
+    } else {
       Alert.alert(
         "ERROR!!",
         "Your Id format is wrong. Please check it and try again.",
