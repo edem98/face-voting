@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Text, ScrollView, View, StyleSheet } from 'react-native'
 import axios from 'axios'
+import { connect } from 'react-redux'
 import VoteCard from './components/VoteCard'
 
 const styles = StyleSheet.create({
@@ -9,7 +10,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     headerText: {
-        fontSize: 35,
+        fontSize: 25,
         color: '#0057FF',
         marginTop: 40,
         alignSelf: 'flex-start',
@@ -17,7 +18,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     headerSubtitleText: {
-        fontSize: 17,
+        fontSize: 16,
         color: 'grey',
         alignSelf: 'flex-start',
         marginLeft: 20,
@@ -60,13 +61,14 @@ const styles = StyleSheet.create({
     }
 })
 
-export default function Vote({ navigation }) {
+const Vote = ({ navigation, baseUrl}) => {
 
     const [votes, setVotes] = useState([]);
-    const [url, setUrl] = useState("https://0b9fd0cc08a8.ngrok.io/");
+    const [url, setUrl] = useState(baseUrl);
     const [userId,setUserId] = useState("ab06fe6e-9")
 
     useEffect(() => {
+        console.log(`${url}api/election/votes/${userId}/`)
         axios.get(`${url}api/election/votes/${userId}/`)
             .then((response) => {
                 setVotes(response.data)
@@ -95,3 +97,12 @@ export default function Vote({ navigation }) {
     )
 }
 
+  
+  const mapStateToProps = (state) => {
+    return {
+      user: state.auth.user,
+      baseUrl: state.auth.baseUrl,
+    };
+  };
+  
+  export default connect(mapStateToProps)(Vote)

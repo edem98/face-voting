@@ -24,7 +24,7 @@ class SignIn extends React.Component {
       electorId: "",
       isConnecting: false,
     };
-    this.url = "https://0b9fd0cc08a8.ngrok.io";
+    this.url = props.baseUrl;
   }
 
   isValidCredentials = () => {
@@ -36,17 +36,17 @@ class SignIn extends React.Component {
   };
 
   setUser = (data) => {
-
     this.props.signIn({
       date_of_expire: data.date_of_expire,
       date_of_issuance: data.date_of_issuance,
       elector_id: data.elector_id,
       first_name: data.first_name,
-      front_picture: this.url + data.front_picture,
+      front_picture: this.url + data.front_picture.slice(1),
       last_name: data.last_name,
       sexe: data.sexe,
     });
   };
+
 
 
   login = async () => {
@@ -55,7 +55,7 @@ class SignIn extends React.Component {
     });
     if (this.isValidCredentials()) {
       // send request for a visit on the current property
-      await axios.get(`${this.url}/api/elector/${this.state.electorId}`)
+      await axios.get(`${this.url}api/elector/${this.state.electorId}`)
         .then((res) => {
           Alert.alert("SUCCÈS!!", "Vous vous êtes connectez avec succès", [
             {
@@ -138,6 +138,7 @@ const mapDispatchToProps = (dispatch) => {
 const mapStateToProps = (state) => {
   return {
     user: state.auth.user,
+    baseUrl: state.auth.baseUrl,
     userType: state.auth.userType,
   };
 };

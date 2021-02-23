@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, TouchableOpacity, Dimensions, StyleSheet, Platform } from 'react-native';
 import { Camera } from 'expo-camera';
+import { connect } from 'react-redux'
 import axios from 'axios'
 
 const dimensions = Dimensions.get('window')
 
-export default function Scanner() {
+const Scanner = ({baseUrl, user, route,navigation}) => {
 
     const [hasPermission, setHasPermission] = useState(null);
+    const [url, setUrl] = useState(baseUrl);
     const [type, setType] = useState(Camera.Constants.Type.front);
     let camera = null;
 
@@ -26,57 +28,39 @@ export default function Scanner() {
         return <Text>No access to camera</Text>;
     }
 
-    function createFormData(photo, electorId) {
-        const data = new FormData();
-        data.append("photo", {
-            name: photo.fileName,
-            type: photo.type,
-            uri:
-                Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
-        });
-        data.append("electorId", electorId)
 
-        return data
-    }
+    async function handleUploadPhoto(photo, electorId,url) {
 
-    function handleUploadPhoto(photo, electorId) {
-
-        console.log("-------------------------")
-        const url = 'https://686c2188e275.ngrok.io/upload/'
-
-        let data = new FormData();
-        data.append("photo", {
-            name: "checkedImage",
-            type: 'jpeg',
-            uri: Platform.OS === "android" ? photo.uri : photo.uri.replace("file://", "")
-        });
-        data.append("electorId", electorId)
-
-        const headers = {
-            'Content-Type': 'multipart/form-data;',
+        try {
+            const upload_url = `${url}api/elector/has-vote/${electorId}/${route.params.vote.id}`
+  
+            axios.get(upload_url)
+                .then((response) => {
+                    console.log(response.data);
+                    navigation.push('Candidate')
+                })
+                .catch(error => {
+                    console.log(error.response.data)
+                })
+        }
+        catch (error) {
+            console.log(error.message)
         }
 
-        axios({
-            method: 'post',
-            url: url,
-            data: data
-          });
-
-        axios.post(url, data, { headers })
-            .then((response) => {
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.log(error)
-                console.log("done")
-            })
+        
     };
 
     async function snap() {
-        if (camera) {
-            let photo = await camera.takePictureAsync();
-            handleUploadPhoto(photo, "5a11b14f-5");
+        try {
+            if (camera) {
+                let photo = await camera.takePictureAsync();
+                handleUploadPhoto(photo, user.elector_id,baseUrl)
+            }
         }
+        catch (error) {
+            console.log(error.message)
+        }
+        
     };
 
     return (
@@ -123,3 +107,13 @@ const styles = StyleSheet.create({
         color: '#000'
     }
 });
+
+const mapStateToProps = (state) => {
+    return {
+      user: state.auth.user,
+      baseUrl: state.auth.baseUrl,
+    };
+  };
+
+
+export default connect(mapStateToProps)(Scanner)

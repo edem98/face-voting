@@ -3,6 +3,7 @@ import { StyleSheet, TextInput, Text, TouchableOpacity, ScrollView, View } from 
 import { SimpleSurvey } from 'react-native-simple-survey'
 import SurveyChoiceBox from './components/SurveyChoiceBox'
 import axios from 'axios'
+import { connect } from 'react-redux'
 
 const styles = StyleSheet.create({
     container: {
@@ -71,8 +72,8 @@ class SurveyDetail extends React.Component {
             survey: {},
             surveyId: 0,
             questions: [],
-            electorId: "ab06fe6e-9"
         }
+        this.electorId = props.user.elector_id
         this.myRef = React.createRef();
     }
 
@@ -82,7 +83,7 @@ class SurveyDetail extends React.Component {
             headers: { 'X-Requested-With': 'XMLHttpRequest' },
         }
 
-        await axios.post(`http://127.0.0.1:8000/api/survey/submit_survey/${this.state.surveyId}/${this.state.electorId}/`, node.getAnswers(), config)
+        await axios.post(`${this.props.urlBase}api/survey/submit_survey/${this.state.surveyId}/${this.electorId}/`, node.getAnswers(), config)
             .then(data => {
                 console.log(data.data.message)
             })
@@ -125,7 +126,7 @@ class SurveyDetail extends React.Component {
     }
 
     getSurveyQuestion = async (surveyId) => {
-        const questions = await axios.get(`http://127.0.0.1:8000/api/survey/question_list/${surveyId}/`)
+        const questions = await axios.get(`${this.props.baseUrl}api/survey/question_list/${surveyId}/`)
             .then((response) => {
                 return response.data
             }).catch(err => {
@@ -283,4 +284,11 @@ class SurveyDetail extends React.Component {
 
 }
 
-export default SurveyDetail;
+const mapStateToProps = (state) => {
+    return {
+      user: state.auth.user,
+      baseUrl: state.auth.baseUrl,
+    };
+  };
+
+export default connect(mapStateToProps)(SurveyDetail);

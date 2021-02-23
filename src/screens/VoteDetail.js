@@ -36,7 +36,9 @@ export default function VoteDetail({ route ,navigation }) {
             <Text style={styles.voteCloseTime}>Time: {formatTime(vote.end_date)}</Text>
             <TouchableWithoutFeedback 
                 style={styles.loginZone}
-                onPress={() => navigation.push('CheckUser')}
+                onPress={() => navigation.push('CheckUser', {
+                    vote: route.params.vote
+                })}
             >
                 <Text style={styles.loginText}>Proceed to vote</Text>
             </TouchableWithoutFeedback>

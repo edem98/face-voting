@@ -12,8 +12,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10
     },
     avatar: {
-        height: 75,
-        width: 75,
+        height: 70,
+        width: 70,
         borderRadius: 40,
         marginTop: -15,
         borderColor: '#0057FF',
@@ -37,13 +37,14 @@ const styles = StyleSheet.create({
         marginLeft: 10,
     },
     profileHeaderName: {
-        fontSize: 20,
+        fontSize: 18,
+        marginLeft: 4,
         fontWeight: 'bold',
         color: '#444444',
     },
     profileHeaderID: {
         marginTop: 7,
-        fontSize: 17,
+        fontSize: 16,
         marginLeft: 5,
         color: 'grey',
     },
@@ -51,9 +52,9 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 15,
         marginBottom: 25,
-        fontSize: 20,
+        fontSize: 17,
         borderWidth: 1,
-        padding: 10,
+        padding: 7,
         borderRadius: 10,
         width: 200,
         alignSelf: 'center',
@@ -80,6 +81,7 @@ class Profile extends React.Component {
 
     render() {
         const {user} = this.props
+        console.log(user.front_picture)
         return (
             <View style={styles.container} >
                 <View style={styles.row}>

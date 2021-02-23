@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { Text, ScrollView, View, StyleSheet } from 'react-native'
 import axios from 'axios'
+import { connect } from 'react-redux'
 import SurveyCard from './components/SurveyCard'
 // import LottieView from 'lottie-react-native';
 
 
-export default function Survey({navigation}) {
+const Survey = ({navigation,baseUrl, user}) => {
 
     const [surveys, setSurveys] = useState([]);
-    const electorId = "ab06fe6e-9"
+    const [url, setUrl] = useState(baseUrl);
+    const electorId = user.elector_id
     let myAnimation = null
 
-
     useEffect(() => {
-        axios.get(`https://eb34a3589563.ngrok.io/api/survey/get_survey_for_elector/${electorId}/`)
+        axios.get(`${url}api/survey/get_survey_for_elector/${electorId}/`)
             .then((response) => {
                 setSurveys(response.data)
             }).catch(err => {
@@ -68,7 +69,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#eee',
     },
     headerText: {
-        fontSize: 35,
+        fontSize: 25,
         color: '#0057FF',
         marginTop: 40,
         alignSelf: 'flex-start',
@@ -105,3 +106,12 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
     }
 })
+
+const mapStateToProps = (state) => {
+    return {
+      user: state.auth.user,
+      baseUrl: state.auth.baseUrl,
+    };
+  };
+  
+  export default connect(mapStateToProps)(Survey)

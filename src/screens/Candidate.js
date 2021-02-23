@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { TouchableOpacity, StyleSheet, Text, ScrollView } from 'react-native'
 import CandidateCard from './components/CandidateCard'
-import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import { connect } from 'react-redux'
+import axios from 'axios'
 
 const styles = StyleSheet.create({
     container: {
@@ -48,62 +49,54 @@ const styles = StyleSheet.create({
 })
 
 
-export default function Candidate() {
+function Candidate({baseUrl, user, route,navigation}) {
 
-    const [candidates, setCandidates] = useState([
-        {
-            'id': 1,
-            'firstname': 'Joe',
-            'lastname': 'Biden',
-            'party': 'Democratic Party',
-            'avatar': 'https://scontent.flfw2-1.fna.fbcdn.net/v/t1.0-9/43691103_1918625128216184_2289209966675886080_o.jpg?_nc_cat=106&ccb=2&_nc_sid=174925&_nc_ohc=O7Z-Wet_ziMAX9YNk-p&_nc_ht=scontent.flfw2-1.fna&oh=447088a6351ad87a44595648c4088cc4&oe=5FD09378',
-            'selected': true
-        },
-        {
-            'id': 2,
-            'firstname': 'Joe',
-            'lastname': 'Biden',
-            'party': 'Democratic Party',
-            'avatar': 'https://scontent.flfw2-1.fna.fbcdn.net/v/t1.0-9/43691103_1918625128216184_2289209966675886080_o.jpg?_nc_cat=106&ccb=2&_nc_sid=174925&_nc_ohc=O7Z-Wet_ziMAX9YNk-p&_nc_ht=scontent.flfw2-1.fna&oh=447088a6351ad87a44595648c4088cc4&oe=5FD09378',
-            'selected': false
-        },
-        {
-            'id': 3,
-            'firstname': 'Joe',
-            'lastname': 'Biden',
-            'party': 'Democratic Party',
-            'avatar': 'https://scontent.flfw2-1.fna.fbcdn.net/v/t1.0-9/43691103_1918625128216184_2289209966675886080_o.jpg?_nc_cat=106&ccb=2&_nc_sid=174925&_nc_ohc=O7Z-Wet_ziMAX9YNk-p&_nc_ht=scontent.flfw2-1.fna&oh=447088a6351ad87a44595648c4088cc4&oe=5FD09378',
-            'selected': false
-        },
-        {
-            'id': 4,
-            'firstname': 'Joe',
-            'lastname': 'Biden',
-            'party': 'Democratic Party',
-            'avatar': 'https://scontent.flfw2-1.fna.fbcdn.net/v/t1.0-9/43691103_1918625128216184_2289209966675886080_o.jpg?_nc_cat=106&ccb=2&_nc_sid=174925&_nc_ohc=O7Z-Wet_ziMAX9YNk-p&_nc_ht=scontent.flfw2-1.fna&oh=447088a6351ad87a44595648c4088cc4&oe=5FD09378',
-            'selected': false
-        }
-    ]);
+    const [url, setUrl] = useState(baseUrl);
+    const [candidates, setCandidates] = useState([]);
+    const [selectedCandidate, setSelectedCandidate] = useState({});
+
+    useEffect(() => {
+        axios.get(`${url}api/election/candidates/`)
+            .then((response) => {
+                setCandidates(response.data)
+            }).catch(err => {
+                console.log(err)
+            })
+    },[])
 
     function toogleCandidate(id) {
         let newCandidates = []
         candidates.forEach((candidate) => {
             if (candidate.id === id) {
                 candidate.selected = true
+                setSelectedCandidate(candidate)
             }
             else {
                 if (candidate.selected = true) {
                     candidate.selected = false
                 }
             }
-            console.log(candidate)
             newCandidates.push(candidate)
         });
         setCandidates(newCandidates)
     }
 
     function confirm() {
-        console.log("hello")
+        const post_url = `${url}api/elector/vote/${user.elector_id}/`
+        const formData = new FormData();
+        formData.append('candidateId', selectedCandidate)
+        formData.append('voteId', route.params.vote.id)
+
+        axios.post(post_url, {formData}, {
+            headers: {
+                'Content-Type':'multipart/form-data'
+                }
+        })
+        .then(response => {
+            console.log(response)
+            navigate.push('Thanks')
+        })
+        .catch(error => console.log(error))
     }
 
     return (
@@ -121,3 +114,14 @@ export default function Candidate() {
         </ScrollView>
     )
 }
+
+
+const mapStateToProps = (state) => {
+    return {
+      user: state.auth.user,
+      baseUrl: state.auth.baseUrl,
+    };
+  };
+
+
+export default connect(mapStateToProps)(Candidate)

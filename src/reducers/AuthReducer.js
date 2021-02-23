@@ -1,5 +1,6 @@
 const initialState = {
   user: {},
+  baseUrl: 'http://64.227.11.112/'
 };
 
 export default function authReducer(state = initialState, action) {

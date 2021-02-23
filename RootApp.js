@@ -78,10 +78,12 @@ const RootStackScreen = ({ userToken }) => {
     <RootStack.Navigator>
     {userToken ? (
       <RootStack.Screen
-        name="Face Vote x"
+        name="Snapvote"
         component={MyTabs}
         options={{
           animationEnabled: false,
+          headerTitleStyle: { alignSelf: 'center', color: '#fff' },
+          headerStyle: {backgroundColor: '#0057FF'},
         }}
       />
     ) : (
