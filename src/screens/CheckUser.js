@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Text, View, TouchableOpacity, Dimensions, StyleSheet, Platform } from 'react-native';
+import { Text, View, TouchableOpacity, Dimensions, StyleSheet, Alert } from 'react-native';
 import { Camera } from 'expo-camera';
 import { connect } from 'react-redux'
 import axios from 'axios'
+import { FancyAlert } from 'react-native-expo-fancy-alerts';
 
 const dimensions = Dimensions.get('window')
 
 const Scanner = ({baseUrl, user, route,navigation}) => {
 
     const [hasPermission, setHasPermission] = useState(null);
+    const [visible,setVisible] = useState(false)
     const [url, setUrl] = useState(baseUrl);
     const [type, setType] = useState(Camera.Constants.Type.front);
     let camera = null;
@@ -35,12 +37,29 @@ const Scanner = ({baseUrl, user, route,navigation}) => {
             const upload_url = `${url}api/elector/has-vote/${electorId}/${route.params.vote.id}`
   
             axios.get(upload_url)
-                .then((response) => {
-                    console.log(response.data);
-                    navigation.push('Candidate')
+                .then(() => {
+                    Alert.alert("SUCCES", "You can continue the voting process", [
+                        {
+                          text: "Fermer",
+                          onPress: () => {
+                            navigation.push('Candidate', {
+                                vote: route.params.vote,
+                            })
+                          },
+                        },
+                    ]);
+                    
                 })
                 .catch(error => {
-                    console.log(error.response.data)
+                    console.log(error.response.data);
+                    Alert.alert("ERROR", "You have already voted", [
+                        {
+                          text: "Fermer",
+                          onPress: () => {
+                            navigation.push('Snapvote')
+                          },
+                        },
+                    ]);
                 })
         }
         catch (error) {

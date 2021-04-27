@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
 })
 
 
-function Candidate({baseUrl, user, route,navigation}) {
+function Candidate({baseUrl, user, route, navigation}) {
 
     const [url, setUrl] = useState(baseUrl);
     const [candidates, setCandidates] = useState([]);
@@ -62,6 +62,7 @@ function Candidate({baseUrl, user, route,navigation}) {
             }).catch(err => {
                 console.log(err)
             })
+            console.log(route.params.vote)
     },[])
 
     function toogleCandidate(id) {
@@ -84,26 +85,26 @@ function Candidate({baseUrl, user, route,navigation}) {
     function confirm() {
         const post_url = `${url}api/elector/vote/${user.elector_id}/`
         const formData = new FormData();
-        formData.append('candidateId', selectedCandidate)
+        formData.append('candidateId', selectedCandidate.id)
         formData.append('voteId', route.params.vote.id)
 
-        axios.post(post_url, {formData}, {
+        axios.post(post_url, formData, {
             headers: {
                 'Content-Type':'multipart/form-data'
                 }
         })
         .then(response => {
             console.log(response)
-            navigate.push('Thanks')
+            navigation.push('Thanks')
         })
-        .catch(error => console.log(error))
+        .catch(error => console.log(error.message))
     }
 
     return (
         <ScrollView contentContainerStyle={styles.container} >
             <Text style={styles.headerText} >Candidates</Text>
             <Text style={styles.headerSubtitleText}>Vote by selecting your candidate</Text>
-            {candidates.map(candidate => <CandidateCard key={candidate.id} id={candidate.id} party={candidate.party} firstName={candidate.firstname} lastName={candidate.lastname} avatar={candidate.avatar} selected={candidate.selected} select={toogleCandidate} ></CandidateCard>)
+            {candidates.map(candidate => <CandidateCard key={candidate.id} id={candidate.id} party={candidate.political_party} firstName={candidate.first_name} lastName={candidate.last_name} avatar={candidate.picture} selected={candidate.selected} select={toogleCandidate} ></CandidateCard>)
             }
             <TouchableOpacity
                 onPress={confirm}

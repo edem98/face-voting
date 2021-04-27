@@ -61,11 +61,11 @@ const styles = StyleSheet.create({
     }
 })
 
-const Vote = ({ navigation, baseUrl}) => {
+const Vote = ({ navigation, baseUrl, user}) => {
 
     const [votes, setVotes] = useState([]);
     const [url, setUrl] = useState(baseUrl);
-    const [userId,setUserId] = useState("ab06fe6e-9")
+    const [userId,setUserId] = useState(user.elector_id)
 
     useEffect(() => {
         console.log(`${url}api/election/votes/${userId}/`)

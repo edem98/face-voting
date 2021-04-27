@@ -35,12 +35,18 @@ export default function VoteDetail({ route ,navigation }) {
             <Text style={styles.voteClose}>Vote will close on:  {formatDate(vote.end_date)}.</Text>
             <Text style={styles.voteCloseTime}>Time: {formatTime(vote.end_date)}</Text>
             <TouchableWithoutFeedback 
-                style={styles.loginZone}
+                style={[styles.loginZone, {width: 220}]}
                 onPress={() => navigation.push('CheckUser', {
                     vote: route.params.vote
                 })}
             >
                 <Text style={styles.loginText}>Proceed to vote</Text>
+            </TouchableWithoutFeedback>
+            <TouchableWithoutFeedback 
+                style={[styles.loginZone, {width: 220}]}
+                onPress={() => navigation.goBack()}
+            >
+                <Text style={styles.loginText}>Cancel vote</Text>
             </TouchableWithoutFeedback>
         </View>
     )

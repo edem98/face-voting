@@ -16,8 +16,8 @@ const styles = StyleSheet.create({
         marginTop: 20
     },
     logo: {
-        width: 230,
-        height: 230,
+        width: 200,
+        height: 200,
         marginTop: -70,
     },
     exitZone: {
@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
         marginVertical: 10,
     },
     exitText: {
-        fontSize: 25,
+        fontSize: 20,
         color: "#fff",
         paddingHorizontal: 30,
     },
@@ -64,7 +64,7 @@ export default function Thanks() {
     const navigation = useNavigation();
 
     function exit() {
-        navigation.push('Survey')
+        navigation.push('Snapvote')
     }
 
     return (
@@ -75,7 +75,7 @@ export default function Thanks() {
                 onPress={exit}
                 style={[styles.elementSpacing, styles.exitZone]}
             >
-                <Text style={styles.exitText}>Go Back to Surveys</Text>
+                <Text style={styles.exitText}>Go to Surveys</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.checkBox}>
                 <Image style={styles.checkMark} source={require('../../assets/checkmark.png')} />
